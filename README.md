@@ -16,4 +16,4 @@ Whether you are interested in exploring the CWGAN-GP algorithm, developing novel
 
 ![Training results by epoch](training_results.gif)
 
-training notebook - [cwgan-gp.ipynb](cwgan-gp.ipynb), [Kaggle Notebook]([https://www.kaggle.com/your_username](https://www.kaggle.com/roihezkiyahu/cwgan-gp))
+training notebook - [cwgan-gp.ipynb](cwgan-gp.ipynb), [Kaggle Notebook](https://www.kaggle.com/roihezkiyahu/cwgan-gp)

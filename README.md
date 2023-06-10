@@ -17,7 +17,7 @@ Whether you are interested in exploring the CWGAN-GP algorithm, developing novel
 ![Training results by epoch](training_results.gif)
 
 
-Training notebook - 
+Training notebook:
 
 - [cwgan-gp.ipynb](cwgan-gp.ipynb) 
 

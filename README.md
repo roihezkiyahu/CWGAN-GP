@@ -16,3 +16,12 @@ Whether you are interested in exploring the CWGAN-GP algorithm, developing novel
 
 ![Training results by epoch](training_results.gif)
 
+
+Training notebook:
+
+- [cwgan-gp.ipynb](cwgan-gp.ipynb) 
+
+- [![Open In Colab](https://img.shields.io/badge/-Open%20In%20Colab-%23F9AB00?style=flat-square&logo=google-colab&logoColor=white)](https://colab.research.google.com/github/roihezkiyahu/cwgan-gp/blob/main/cwgan-gp.ipynb) 
+
+- [![Open In Kaggle](https://img.shields.io/badge/-Kaggle%20Notebook-%2320BEFF?style=flat-square&logo=kaggle&logoColor=white)](https://www.kaggle.com/roihezkiyahu/cwgan-gp)
+

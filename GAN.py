@@ -93,6 +93,8 @@ class GAN(pl.LightningModule):
         self.save_interval = save_interval
         self.zip_folder = zip_folder
         self.verbosity = verbosity
+        self.automatic_optimization = False
+        self.train_iter = 0
 
     def forward(self, z, batch_labels):
         """

@@ -124,11 +124,3 @@ class GeneratorMNIST(nn.Module):
         x = torch.cat([x, label_reshaped], dim=1)
         x = self.features_to_image(x)
         return x
-
-    def forward(self, input_data, label):
-        x = self.l2f(input_data)
-        x = x.view(-1, 4 * self.dim, self.feature_sizes[0], self.feature_sizes[1])
-        label_reshaped = self.label_block(label).view(-1, 1, self.feature_sizes[0], self.feature_sizes[1])
-        x = torch.cat([x, label_reshaped], dim=1)
-        x = self.features_2_image(x)
-        return x

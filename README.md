@@ -11,3 +11,8 @@ The code provides a clean and efficient implementation, leveraging the power of 
 Additionally, this repository offers comprehensive training and evaluation scripts, allowing users to easily train CWGAN-GP models on custom datasets and evaluate their performance. The training process is accompanied by detailed logging and visualizations, enabling effective monitoring of the training progress and generated sample quality.
 
 Whether you are interested in exploring the CWGAN-GP algorithm, developing novel generative models, or applying conditional generation to your specific domain, this repository provides a solid foundation for further experimentation and research.
+
+## Training the CWGAN-GP on fashion mnist
+
+![Training results by epoch](training_results.gif)
+

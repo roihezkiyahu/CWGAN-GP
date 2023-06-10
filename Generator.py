@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 
-
 class Conv2dTBlockMNIST(nn.Module):
     """
     Convolutional Transpose Block for MNIST GAN.
@@ -83,7 +82,7 @@ class GeneratorMNIST(nn.Module):
         self.block_1 = Conv2dTBlockMNIST(4 * dim + 1, 2 * dim, batch_norm=batch_norm)
         self.block_2 = Conv2dTBlockMNIST(2 * dim, dim, batch_norm=batch_norm)
         self.block_3 = nn.Sequential(
-            nn.ConvTranspose2d(dim, 1, 3, 2, 1, 1),
+            nn.ConvTranspose2d(dim, img_size[2], 3, 2, 1, 1),
             nn.Tanh()
         )
 

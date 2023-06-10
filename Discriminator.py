@@ -68,7 +68,7 @@ class DiscriminatorMNIST(nn.Module):
         self.img_size = img_size
         self.feature_sizes = (self.img_size[0] // 2 ** num_downsamp, self.img_size[1] // 2 ** num_downsamp)
 
-        self.block_1 = Conv2dBlockMNIST(self.img_size[2] + 1, dim)
+        self.block_1 = Conv2dBlockMNIST(self.img_size[2]*2, dim)
         self.block_2 = Conv2dBlockMNIST(dim, 2 * dim, batch_norm=batch_norm)
         self.block_3 = Conv2dBlockMNIST(2 * dim, 4 * dim, batch_norm=batch_norm)
         self.predictor = nn.Sequential(nn.Linear(4 * np.prod(self.feature_sizes) * self.dim, 1),
@@ -107,7 +107,7 @@ class DiscriminatorMNIST(nn.Module):
             torch.Tensor: Output tensor.
         """
         x = input_data.view(-1, self.img_size[2], self.img_size[0], self.img_size[1])
-        label_reshaped = self.label_block(label).view(-1, 1, self.img_size[0], self.img_size[1])
+        label_reshaped = self.label_block(label).view(-1, self.img_size[2], self.img_size[0], self.img_size[1])
         x = torch.cat([x, label_reshaped], dim=1)
         x = self.image_to_features(x, add_noise)
         x = x.view(-1, 4 * np.prod(self.feature_sizes) * self.dim)

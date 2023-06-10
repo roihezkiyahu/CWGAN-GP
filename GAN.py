@@ -68,7 +68,7 @@ class GAN(pl.LightningModule):
         self.discriminator_loss = discriminator_loss # will only be used if wgan_mode is False
         self.wgan_mode = wgan_mode
         self.lambda_gp = lambda_gp
-        self.device = device
+        self.device_ = device
         self.lr = lr
         self.betas = betas
         self.n_critic = n_critic
@@ -119,11 +119,11 @@ class GAN(pl.LightningModule):
         Returns:
             torch.Tensor: Computed gradient penalty.
         """
-        alpha = torch.Tensor(np.random.random((real_samples.size(0), 1, 1, 1))).to(self.device)
+        alpha = torch.Tensor(np.random.random((real_samples.size(0), 1, 1, 1))).to(self.device_)
         interpolates = (alpha * real_samples + ((1 - alpha) * fake_samples)).clone().detach().requires_grad_(True)
-        interpolates = interpolates.to(self.device)
+        interpolates = interpolates.to(self.device_)
         d_interpolates = self.discriminator(interpolates, batch_labels)
-        fake = torch.Tensor(real_samples.shape[0], 1).fill_(1.0).to(self.device)
+        fake = torch.Tensor(real_samples.shape[0], 1).fill_(1.0).to(self.device_)
         gradients = torch.autograd.grad(
             outputs=d_interpolates,
             inputs=interpolates,
@@ -132,7 +132,7 @@ class GAN(pl.LightningModule):
             retain_graph=True,
             only_inputs=True,
         )[0]
-        gradients = gradients.view(gradients.size(0), -1).to(self.device)
+        gradients = gradients.view(gradients.size(0), -1).to(self.device_)
         gradients_norm = ((torch.sqrt(torch.sum(gradients ** 2, dim=1) + 1e-12) - 1) ** 2).mean()
         return gradients_norm
 
@@ -150,14 +150,14 @@ class GAN(pl.LightningModule):
         zero_fuzz, ones_fuzz = self.fuzzy
         if zeros:
             if not zero_fuzz:
-                labels = torch.full((batch_size,), 0, device=self.device)
+                labels = torch.full((batch_size,), 0, device=self.device_)
             else:
-                labels = torch.rand(batch_size, device=self.device) * zero_fuzz
+                labels = torch.rand(batch_size, device=self.device_) * zero_fuzz
         else:
             if not ones_fuzz:
-                labels = torch.full((batch_size,), 1, device=self.device)
+                labels = torch.full((batch_size,), 1, device=self.device_)
             else:
-                labels = 1 - torch.rand(batch_size, device=self.device) * ones_fuzz * 2 - ones_fuzz
+                labels = 1 - torch.rand(batch_size, device=self.device_) * ones_fuzz * 2 - ones_fuzz
         return labels
 
     def train_generator(self, optimizer_g, z, batch_labels):
@@ -257,7 +257,6 @@ class GAN(pl.LightningModule):
         Returns:
             Tuple[torch.optim.Optimizer, torch.optim.Optimizer]: Optimizers for the generator and discriminator.
         """
-        gener
         if isinstance(self.optimzers_input, type(None)):
             opt_g = torch.optim.Adam(self.generator.parameters(), lr=self.lr * self.generator_lr_factor, betas=self.betas)
             opt_d = torch.optim.Adam(self.discriminator.parameters(), lr=self.lr, betas=self.betas)
@@ -327,7 +326,7 @@ class GAN(pl.LightningModule):
         """
         z = self.validation_z
         with torch.no_grad():
-            sample_imgs = self(z.to(self.device), self.classes_z.to(self.device)).detach()
+            sample_imgs = self(z.to(self.device_), self.classes_z.to(self.device_)).detach()
         self.plot_grid((sample_imgs + 1) / 2)
 
     def get_cur_lr(self):

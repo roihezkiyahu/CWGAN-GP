@@ -71,7 +71,7 @@ class GeneratorMNIST(nn.Module):
         self.feature_sizes = (img_size[0] // 2 ** num_upsamp, img_size[1] // 2 ** num_upsamp)
 
         self.l2f = nn.Sequential(
-            nn.ConvTranspose2d(latent_dim, 4 * dim, self.feature_sizes[0], 1, 0, bias=False),
+            nn.ConvTranspose2d(latent_dim, 4 * dim, 1, 1, 0, bias=False),
             nn.BatchNorm2d(4 * dim),
             nn.LeakyReLU(0.2)
         ) if conv_input else nn.Sequential(

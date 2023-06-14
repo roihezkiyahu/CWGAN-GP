@@ -64,7 +64,7 @@ class GeneratorMNIST(nn.Module):
         conv_input (bool): Whether to use convolutional input. Default: False.
     """
     def __init__(self, img_size, latent_dim, dim=64, num_upsamp=3, batch_norm=True, n_classes=10, emb_dim=10,
-                 conv_input=False):
+                 conv_input=True):
         super(GeneratorMNIST, self).__init__()
         self.dim = dim
         self.latent_dim = latent_dim

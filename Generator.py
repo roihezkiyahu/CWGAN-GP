@@ -118,8 +118,11 @@ class GeneratorMNIST(nn.Module):
             torch.Tensor: Output tensor.
         """
         x = self.l2f(input_data.view(-1, self.latent_dim, 1, 1))
+        print("xshape: ", x.shape)
         x = x.view(-1, 4 * self.dim, self.feature_sizes[0], self.feature_sizes[1])
+        print("xshape: ", x.shape)
         label_reshaped = self.label_block(label).view(-1, 1, self.feature_sizes[0], self.feature_sizes[1])
+        print("label_reshaped: ", label_reshaped.shape)
         x = torch.cat([x, label_reshaped], dim=1)
         x = self.features_to_image(x)
         return x

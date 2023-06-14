@@ -12,9 +12,13 @@ Additionally, this repository offers comprehensive training and evaluation scrip
 
 Whether you are interested in exploring the CWGAN-GP algorithm, developing novel generative models, or applying conditional generation to your specific domain, this repository provides a solid foundation for further experimentation and research.
 
-## Training the CWGAN-GP on fashion mnist
+## Training CWGAN-GP on fashion mnist
 
-![Training results by epoch](training_results.gif)
+![Training results by epoch](training_results.gif)  
+
+## Training CWGAN-GP on mnist
+
+![Training results by epoch](Mnist.gif)
 
 
 Training notebook:

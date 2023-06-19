@@ -60,21 +60,22 @@ class DiscriminatorMNIST(nn.Module):
         batch_norm (bool): Whether to use batch normalization. Default: False.
         n_classes (int): Number of classes. Default: 10.
         emb_dim (int): Dimensionality of the embedding layer. Default: 10.
+        label_dim (int): Dimensionality of label layer. Default: 10.
     """
 
-    def __init__(self, img_size, dim=64, num_downsamp=3, batch_norm=False, n_classes=10, emb_dim=10):
+    def __init__(self, img_size, dim=64, num_downsamp=3, batch_norm=False, n_classes=10, emb_dim=25, label_dim=10):
         super(DiscriminatorMNIST, self).__init__()
         self.dim = dim
         self.img_size = img_size
         self.feature_sizes = (self.img_size[0] // 2 ** num_downsamp, self.img_size[1] // 2 ** num_downsamp)
-
-        self.block_1 = Conv2dBlockMNIST(self.img_size[2]+1, dim)
+        self.label_dim = label_dim
+        self.block_1 = Conv2dBlockMNIST(self.img_size[2]+self.label_dim, dim)
         self.block_2 = Conv2dBlockMNIST(dim, 2 * dim, batch_norm=batch_norm)
         self.block_3 = Conv2dBlockMNIST(2 * dim, 4 * dim, batch_norm=batch_norm)
         self.predictor = nn.Sequential(nn.Linear(4 * np.prod(self.feature_sizes) * self.dim, 1),
                                        nn.Sigmoid())
         self.label_block = nn.Sequential(nn.Embedding(n_classes, emb_dim),
-                                         nn.Linear(emb_dim, np.prod(img_size[:2])))
+                                         nn.Linear(emb_dim, self.label_dim*np.prod(img_size[:2])))
 
     def image_to_features(self, x, add_noise=True):
         """
@@ -107,7 +108,7 @@ class DiscriminatorMNIST(nn.Module):
             torch.Tensor: Output tensor.
         """
         x = input_data.view(-1, self.img_size[2], self.img_size[0], self.img_size[1])
-        label_reshaped = self.label_block(label).view(-1, 1, self.img_size[0], self.img_size[1])
+        label_reshaped = self.label_block(label).view(-1, self.label_dim, self.img_size[0], self.img_size[1])
         x = torch.cat([x, label_reshaped], dim=1)
         x = self.image_to_features(x, add_noise)
         x = x.view(-1, 4 * np.prod(self.feature_sizes) * self.dim)

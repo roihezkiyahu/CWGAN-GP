@@ -12,7 +12,7 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 
-def create_gif(folder_path, output_path, fps=5, display=True):
+def create_gif(folder_path, output_path, fps=5, display=True,pause_end=5, output_name='output.gif'):
     image_files = sorted([f for f in os.listdir(folder_path) if f.endswith('.png')])
     epoch_numbers = [int(re.findall(r'res_epoch_(\d+)\.png', f)[0]) for f in image_files]
     image_files_sorted = [f for _, f in sorted(zip(epoch_numbers, image_files))]
@@ -23,7 +23,9 @@ def create_gif(folder_path, output_path, fps=5, display=True):
         image_path = os.path.join(folder_path, file)
         image = Image.open(image_path)
         images.append(image)
-    output_path = os.path.join(output_path, 'output.gif')
+    for i in range(pause_end*fps):
+        images.append(image)
+    output_path = os.path.join(output_path, output_name)
     images[0].save(output_path, save_all=True, append_images=images[1:], duration=int(1000/fps), loop=0)
     print(f"GIF created successfully at: {output_path}")
     if display:

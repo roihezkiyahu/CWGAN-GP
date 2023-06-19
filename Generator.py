@@ -62,12 +62,14 @@ class GeneratorMNIST(nn.Module):
         n_classes (int): Number of classes. Default: 10.
         emb_dim (int): Dimensionality of the embedding layer. Default: 10.
         conv_input (bool): Whether to use convolutional input. Default: False.
+        label_dim (int): Dimensionality of label layer. Default: 10.
     """
-    def __init__(self, img_size, latent_dim, dim=64, num_upsamp=3, batch_norm=True, n_classes=10, emb_dim=10,
-                 conv_input=True):
+    def __init__(self, img_size, latent_dim, dim=64, num_upsamp=3, batch_norm=True, n_classes=10, emb_dim=25,
+                 conv_input=True, label_dim=10):
         super(GeneratorMNIST, self).__init__()
         self.dim = dim
         self.latent_dim = latent_dim
+        self.label_dim = label_dim
         self.feature_sizes = (img_size[0] // 2 ** num_upsamp, img_size[1] // 2 ** num_upsamp)
 
         self.l2f = nn.Sequential(
@@ -79,7 +81,7 @@ class GeneratorMNIST(nn.Module):
             nn.LeakyReLU(0.2)
         )
 
-        self.block_1 = Conv2dTBlockMNIST(4 * dim + 1, 2 * dim, batch_norm=batch_norm)
+        self.block_1 = Conv2dTBlockMNIST(4 * dim + self.label_dim, 2 * dim, batch_norm=batch_norm)
         self.block_2 = Conv2dTBlockMNIST(2 * dim, dim, batch_norm=batch_norm)
         self.block_3 = nn.Sequential(
             nn.ConvTranspose2d(dim, img_size[2], 3, 2, 1, 1),
@@ -88,7 +90,7 @@ class GeneratorMNIST(nn.Module):
 
         self.label_block = nn.Sequential(
             nn.Embedding(n_classes, emb_dim),
-            nn.Linear(emb_dim, self.feature_sizes[0] * self.feature_sizes[1])
+            nn.Linear(emb_dim, self.label_dim*self.feature_sizes[0] * self.feature_sizes[1])
         )
 
     def features_to_image(self, x):
@@ -119,7 +121,7 @@ class GeneratorMNIST(nn.Module):
         """
         x = self.l2f(input_data.view(-1, self.latent_dim, 1, 1))
         x = x.view(-1, 4 * self.dim, self.feature_sizes[0], self.feature_sizes[1])
-        label_reshaped = self.label_block(label).view(-1, 1, self.feature_sizes[0], self.feature_sizes[1])
+        label_reshaped = self.label_block(label).view(-1, self.label_dim, self.feature_sizes[0], self.feature_sizes[1])
         x = torch.cat([x, label_reshaped], dim=1)
         x = self.features_to_image(x)
         return x
